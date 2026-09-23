@@ -1,0 +1,63 @@
+{
+  "created_at_utc": "2026-09-23T03:35:10.908724+00:00",
+  "site_url": "https://meus-bracket-preview.jungin9801.chatgpt.site",
+  "project_id": "appgprj_6aab98d0a65c8191961d82c139c84a86",
+  "published_version": 14,
+  "version_id": "appgprj_6aab98d0a65c8191961d82c139c84a86~appgver_0d5e5a76fe3c8191b48e4c22c51339b3",
+  "deployment_id": "appgdep_6ab33360f8a081919c8992ca15713f0f",
+  "deployment_status": "succeeded",
+  "source_commit_sha": "4c597d31bed2cebe25dc4a9432a677972fc73361",
+  "entrypoint": "dist/index.html",
+  "entrypoint_matches_published_source": true,
+  "packaging_note": "실행 소스와 assets는 게시 소스와 동일. START_HERE.txt, HANDOFF.md, README.md만 최종 전달 시점에 맞춰 정리함.",
+  "dimensions_mm": {
+    "print_width": 443,
+    "print_height": 14,
+    "minimum_marking_height": 5,
+    "maximum_marking_height": 12,
+    "default_marking_height": 10
+  },
+  "github_pushed": false,
+  "files": {
+    ".openai/hosting.json": {
+      "sha256": "dce48def864d4a1c8caf0ad57ac90fbe0fb423794aa8b54aa7149e623cc297cb",
+      "bytes": 87
+    },
+    "HANDOFF.md": {
+      "sha256": "9b91f76fb4fadb6a74b355660920e037142912a7e083452c8cf147de1a735176",
+      "bytes": 8245
+    },
+    "README.md": {
+      "sha256": "417be9b46ebdde461bf049439a7a14c736974acc08b5ba1d401c5fd93e0e6a0b",
+      "bytes": 2640
+    },
+    "START_HERE.txt": {
+      "sha256": "703ae5db58a11a40166736022ee2ecae5ff1523a33845c21b7afb21c99aa9f50",
+      "bytes": 2557
+    },
+    "assets/bracket-black.gif": {
+      "sha256": "997fed82935c40d576a5885767d9cf466deca5ae7509a3516927f36489f9fa2d",
+      "bytes": 136524
+    },
+    "assets/bracket-gray.gif": {
+      "sha256": "e5af404d3a74b220f9c7ed2da61aa4fe9e3b001baccabd357a7ba45c9a209ecc",
+      "bytes": 133393
+    },
+    "assets/kakao-channel-logo.png": {
+      "sha256": "6b4545da192bca734a5d1708adcee381ad96cfc4c578b5311ba8a55006b7fdd4",
+      "bytes": 36047
+    },
+    "assets/meus-logo.gif": {
+      "sha256": "e401f27bc8f637d320e345596e3670890c45dff1a7d80075b6de50ac3b78db61",
+      "bytes": 4263
+    },
+    "assets/naver-logo.png": {
+      "sha256": "4e4f4472f28afd398f2a47b21a4e1eaaf7b6c8d49038c6bfd99d9947363db473",
+      "bytes": 23703
+    },
+    "dist/index.html": {
+      "sha256": "5a6d6f56f6132dfcb5bb1f52731ab6cb71082052b27a0e483332240f718607b3",
+      "bytes": 525163
+    }
+  }
+}
