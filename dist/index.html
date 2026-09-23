@@ -1106,9 +1106,12 @@
                     return;
                 }
                 // Capture settings and pixels together, before the user edits anything else.
-                savedDesign = { image: canvas.toDataURL('image/png'), settings: createRequestSettings(), filename: 'MEUS_브라켓_시안.png', isLogo: type === 'logo' };
+                const pngBlob = await new Promise((resolve, reject) => {
+                    canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('PNG 생성 실패')), 'image/png');
+                });
+                savedDesign = { blob: pngBlob, image: canvas.toDataURL('image/png'), settings: createRequestSettings(), filename: 'MEUS_브라켓_시안.png', isLogo: type === 'logo' };
                 showModal();
-                downloadSavedDesign();
+                await downloadSavedDesign();
             } catch (error) {
                 alert('시안을 저장하지 못했습니다. 이미지를 확인한 뒤 다시 시도해 주세요.');
             } finally {
@@ -1119,13 +1122,58 @@
             }
         }
 
-        function downloadSavedDesign() {
+        async function downloadSavedDesign() {
             if (!savedDesign) return;
+            const status = document.getElementById('downloadStatus');
+            const blob = savedDesign.blob || await (await fetch(savedDesign.image)).blob();
+            const file = new File([blob], savedDesign.filename, { type: 'image/png' });
+
+            // 모바일 Safari/앱 내 브라우저에서는 <a download>가 막힐 수 있어
+            // Web Share가 가능하면 시스템 공유/저장 화면을 우선 사용합니다.
+            try {
+                if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                    await navigator.share({
+                        files: [file],
+                        title: 'MEUS 브라켓 시안'
+                    });
+                    status.textContent = '공유/저장 화면을 열었습니다. 사진 저장 또는 원하는 앱을 선택해 주세요.';
+                    return;
+                }
+            } catch (error) {
+                if (error && error.name === 'AbortError') {
+                    status.textContent = '저장이 취소되었습니다. 아래의 이미지 저장 버튼을 다시 눌러 주세요.';
+                    return;
+                }
+            }
+
+            // 일반 브라우저는 Blob URL 다운로드를 사용합니다.
+            const objectUrl = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.download = savedDesign.filename;
-            link.href = savedDesign.image;
-            document.body.appendChild(link); link.click(); link.remove();
-            document.getElementById('downloadStatus').textContent = '이미지 다운로드를 시작했습니다. 기기에서 저장 여부를 확인해 주세요.';
+            link.href = objectUrl;
+            link.rel = 'noopener';
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+            // iOS 등 download 속성이 동작하지 않는 환경에서는 새 탭으로 이미지를 열어
+            // 길게 눌러 사진에 저장할 수 있게 합니다.
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            if (isIOS) {
+                setTimeout(() => {
+                    const opened = window.open(objectUrl, '_blank');
+                    if (opened) {
+                        status.textContent = '이미지를 새 화면에 열었습니다. 이미지를 길게 눌러 사진에 저장해 주세요.';
+                    } else {
+                        status.textContent = '자동 저장이 막혔습니다. 브라우저 메뉴에서 팝업 허용 후 다시 시도해 주세요.';
+                    }
+                }, 150);
+                setTimeout(() => URL.revokeObjectURL(objectUrl), 60000);
+            } else {
+                status.textContent = '이미지 다운로드를 시작했습니다. 기기에서 저장 여부를 확인해 주세요.';
+                setTimeout(() => URL.revokeObjectURL(objectUrl), 5000);
+            }
         }
 
         async function copyRequestSettings() {
