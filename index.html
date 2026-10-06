@@ -406,6 +406,8 @@
                         <span>최소 5mm · 최대 12mm</span>
                         <label class="flex items-center gap-2"><input id="textSizeInput" aria-label="글자 높이 직접 입력 (mm)" type="number" min="5" max="12" step="0.1" value="10" oninput="setTextSize(this.value, true)" onblur="setTextSize(this.value)" class="w-20 bg-surface border border-line rounded-lg px-2 py-2 text-ink text-right"><span>mm</span></label>
                     </div>
+                    <p id="textWidthWarning" role="status" class="text-sm text-red-700 font-semibold mt-2" hidden></p>
+                    <p class="text-sm text-muted mt-2 leading-relaxed">단일 문구의 가로 길이는 최대 190mm입니다. 왼쪽·오른쪽에 각각 문구/로고를 넣는 등 복수 위치 마킹은 사이트에서 지원하지 않으며, 제작 시 추가금이 발생하므로 네이버 톡톡 또는 카카오톡 채널로 별도 문의해 주세요.</p>
                 </div>
                 </div>
             </div>
@@ -451,7 +453,8 @@
                         <label for="logoSizeSlider" class="flex justify-between text-sm text-accent mb-3"><span>로고 크기 (높이)</span><output id="logoSizeLabel" class="text-accent">10mm</output></label>
                         <input type="range" id="logoSizeSlider" min="5" max="12" step="0.1" value="10" oninput="renderPreview()">
                         <p class="text-sm text-muted mt-3">최소 5mm · 최대 12mm · 가로세로 비율 유지</p>
-                        <p id="logoSizeWarning" role="status" class="text-sm text-earth mt-2" hidden>로고가 가로 영역을 벗어납니다. 높이를 줄여 주세요. 5mm에서도 벗어나면 로고 구성을 조정해야 합니다.</p>
+                        <p id="logoSizeWarning" role="status" class="text-sm text-red-700 font-semibold mt-2" hidden></p>
+                        <p class="text-sm text-muted mt-2 leading-relaxed">단일 로고의 가로 길이는 최대 190mm입니다. 왼쪽·오른쪽에 각각 문구/로고를 넣는 등 복수 위치 마킹은 사이트에서 지원하지 않으며, 제작 시 추가금이 발생하므로 네이버 톡톡 또는 카카오톡 채널로 별도 문의해 주세요.</p>
                     </div>
                     <fieldset>
                         <legend class="text-sm text-accent mb-2">가로 정렬</legend>
@@ -468,7 +471,7 @@
                             <span id="logoPosHelp">음수는 왼쪽, 양수는 오른쪽 이동</span>
                             <label class="flex items-center gap-2"><input id="logoPosInput" aria-label="로고 가로 위치 (mm)" type="number" min="-216.6" max="216.6" step="0.1" value="0" oninput="updateLogoPosition(this.value, true)" onblur="updateLogoPosition(this.value)" class="w-24 bg-surface border border-line rounded-lg px-2 py-2 text-ink text-right"><span>mm</span></label>
                         </div>
-                        <p class="text-sm text-muted mt-2">가로 기준 443mm · 투명 여백을 제외한 로고 경계 기준</p>
+                        <p class="text-sm text-muted mt-2">가로 기준 437mm · 투명 여백을 제외한 로고 경계 기준</p>
                     </div>
                     <button type="button" onclick="clearLogo()" class="text-sm text-red-700 underline">로고 삭제</button>
                 </fieldset>
@@ -607,9 +610,10 @@
         }
 
         // Physical dimensions provided by MEUS; photograph placement uses its existing strip center.
-        const markingWidthMm = 443;
-        const silkPrintHeightMm = 14;
+        const markingWidthMm = 437;
+        const silkPrintHeightMm = 15;
         const maxMarkingHeightMm = 12;
+        const maxSingleMarkingWidthMm = 190;
         function calibratedMarkingArea(photoArea) {
             const pxPerMm = photoArea.w / markingWidthMm;
             const h = maxMarkingHeightMm * pxPerMm;
@@ -844,7 +848,7 @@
             const min = align === 'center' ? -limit : 0;
             const offsetMm = Math.max(min, Math.min(limit, Number(position) || 0));
             const leftMm = align === 'left' ? offsetMm : align === 'right' ? freeMm-offsetMm : (markingWidthMm-widthMm)/2+offsetMm;
-            return {heightMm, widthMm, leftMm, offsetMm, min, max:limit, fits:widthMm <= markingWidthMm};
+            return {heightMm, widthMm, leftMm, offsetMm, min, max:limit, fits:widthMm <= Math.min(markingWidthMm, maxSingleMarkingWidthMm)};
         }
         function logoPositionDescription() {
             if (logoAlign === 'left') return `왼쪽 끝 → 로고 왼쪽 끝 여백 ${formatMm(logoPositionMm)}mm`;
@@ -958,6 +962,30 @@
             return true;
         }
 
+        function currentTextWidthMm() {
+            const text = document.getElementById('textInput').value || '';
+            if (!text) return 0;
+            const key = document.querySelector('input[name="tier"]:checked').value;
+            const area = calibratedMarkingArea(bracketTypes[key].area);
+            const font = document.getElementById('fontSelect').value;
+            const weight = markingFontWeight(font);
+            const family = markingFontFamily(font);
+            const mm = Number(document.getElementById('textSizeSlider').value);
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const targetHeight = area.pxPerMm * mm;
+            ctx.font = `${weight} 100px ${family}`;
+            const measured = ctx.measureText(text);
+            const measuredHeight = measured.actualBoundingBoxAscent + measured.actualBoundingBoxDescent || 100;
+            const fontSize = 100 * targetHeight / measuredHeight;
+            ctx.font = `${weight} ${fontSize}px ${family}`;
+            return ctx.measureText(text).width / area.pxPerMm;
+        }
+
+        function textFitsSingleMarkingWidth() {
+            return currentTextWidthMm() <= maxSingleMarkingWidthMm;
+        }
+
         function logoFitsMarkingArea() {
             if (!logoBounds) return true;
             const key = document.querySelector('input[name="tier"]:checked').value;
@@ -1011,7 +1039,19 @@
 
         function renderPreview() {
             syncLogoPositionControls();
-            document.getElementById('logoSizeWarning').hidden = logoFitsMarkingArea();
+            const type = document.querySelector('input[name="markingType"]:checked').value;
+            const textWidth = currentTextWidthMm();
+            const textWarning = document.getElementById('textWidthWarning');
+            const textTooWide = type === 'text' && textWidth > maxSingleMarkingWidthMm;
+            textWarning.hidden = !textTooWide;
+            textWarning.textContent = textTooWide ? `현재 문구 가로 길이 약 ${formatMm(textWidth)}mm — 최대 190mm를 초과해 저장할 수 없습니다. 크기 또는 문구를 줄여 주세요.` : '';
+
+            const logoLayout = logoLayoutMm(logoBounds, Number(document.getElementById('logoSizeSlider').value), logoPositionMm, logoAlign);
+            const logoWarning = document.getElementById('logoSizeWarning');
+            const logoTooWide = type === 'logo' && logoBounds && logoLayout.widthMm > maxSingleMarkingWidthMm;
+            logoWarning.hidden = !logoTooWide;
+            logoWarning.textContent = logoTooWide ? `현재 로고 가로 길이 약 ${formatMm(logoLayout.widthMm)}mm — 최대 190mm를 초과해 저장할 수 없습니다. 로고 높이를 줄여 주세요.` : '';
+
             document.getElementById('textSizeLabel').innerText = document.getElementById('textSizeSlider').value + 'mm';
             document.getElementById('logoSizeLabel').innerText = document.getElementById('logoSizeSlider').value + 'mm';
             if (drawBracket(document.getElementById('bracketPreview'))) renderMarkingDetail();
@@ -1025,10 +1065,10 @@
             const type = document.querySelector('input[name="markingType"]:checked').value;
             const config = bracketTypes[key];
             const lines = ['[MEUS 브라켓 제작 요청]', `브라켓: ${config.name}`, `브라켓 색상: ${config.backgroundLabel} 배경 / ${config.markingLabel} 각인`, `마킹 타입: ${type === 'text' ? '텍스트' : '로고·이미지'}`];
-            lines.push(`인쇄면 규격: ${markingWidthMm}mm × ${silkPrintHeightMm}mm`, `마킹 영역 기준: 가로 ${markingWidthMm}mm × 최대 높이 ${maxMarkingHeightMm}mm`, `세로 배치: 실크인쇄면 높이 ${silkPrintHeightMm}mm의 중앙`);
+            lines.push(`인쇄면 규격: ${markingWidthMm}mm × ${silkPrintHeightMm}mm`, `단일 마킹 최대 가로 길이: ${maxSingleMarkingWidthMm}mm`, `마킹 영역 기준: 가로 ${markingWidthMm}mm × 최대 높이 ${maxMarkingHeightMm}mm`, `세로 배치: 실크인쇄면 높이 ${silkPrintHeightMm}mm의 중앙`);
             if (type === 'text') {
                 const fontSelect = document.getElementById('fontSelect');
-                lines.push(`마킹 문구: ${document.getElementById('textInput').value || '(없음)'}`, `폰트: ${fontSelect.selectedOptions[0].textContent} (${fontSelect.value})`, `글자 높이 설정: ${document.getElementById('textSizeSlider').value}mm`, `텍스트 정렬: ${{left:'왼쪽',center:'가운데',right:'오른쪽'}[currentAlign]}`);
+                lines.push(`마킹 문구: ${document.getElementById('textInput').value || '(없음)'}`, `폰트: ${fontSelect.selectedOptions[0].textContent} (${fontSelect.value})`, `글자 높이 설정: ${document.getElementById('textSizeSlider').value}mm`, `문구 가로 폭: ${formatMm(currentTextWidthMm())}mm`, `텍스트 정렬: ${{left:'왼쪽',center:'가운데',right:'오른쪽'}[currentAlign]}`);
                 if (fontSelect.value === 'Cinzel Decorative') lines.push('한글 적용 폰트: 본명조 Bold (700)');
                 if (fontSelect.value === 'Rubik') lines.push('영문 굵기: SemiBold (600)', '한글 적용 폰트: 나눔스퀘어 Bold (700)');
             } else {
@@ -1092,12 +1132,17 @@
                         return;
                     }
                 }
+                if (type === 'text' && !textFitsSingleMarkingWidth()) {
+                    alert(`현재 문구 가로 길이는 약 ${formatMm(currentTextWidthMm())}mm입니다. 단일 마킹은 최대 190mm까지 가능합니다. 크기 또는 문구를 줄여 주세요.\n\n왼쪽·오른쪽에 각각 문구/로고를 넣는 복수 위치 마킹은 추가금이 발생하므로 네이버 톡톡 또는 카카오톡 채널로 별도 문의해 주세요.`);
+                    return;
+                }
                 if (type === 'logo' && (!isLogoUploaded || !logoBounds)) {
                     alert('시안에 사용할 로고를 선택해 주세요. 로고가 모두 지워졌다면 강도를 낮추거나 원본을 복원해 주세요.');
                     return;
                 }
                 if (type === 'logo' && !logoFitsMarkingArea()) {
-                    alert('로고가 가로 영역을 벗어납니다. 높이를 줄이거나 로고 구성을 조정한 뒤 저장해 주세요.');
+                    const widthMm = logoLayoutMm(logoBounds, Number(document.getElementById('logoSizeSlider').value), logoPositionMm, logoAlign).widthMm;
+                    alert(`현재 로고 가로 길이는 약 ${formatMm(widthMm)}mm입니다. 단일 마킹은 최대 190mm까지 가능합니다. 로고 높이를 줄여 주세요.\n\n왼쪽·오른쪽에 각각 문구/로고를 넣는 복수 위치 마킹은 추가금이 발생하므로 네이버 톡톡 또는 카카오톡 채널로 별도 문의해 주세요.`);
                     return;
                 }
                 const canvas = document.getElementById('exportCanvas');
