@@ -34,6 +34,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&amp;display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700&amp;display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@600&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Orbitron:wght@700&amp;display=swap" rel="stylesheet">
     <style>
         @font-face {
             font-family: 'NanumSquare';
@@ -375,6 +376,8 @@
                         <select id="fontSelect" onchange="loadPreviewFont()" class="w-full bg-surface border border-line rounded-xl px-3 py-3 text-ink focus:outline-none focus:border-accent transition text-sm">
                             <option value="NanumSquare">나눔스퀘어 Bold</option>
                             <option value="Rubik">Rubik SemiBold</option>
+                            <option value="Bebas Neue">Bebas Neue</option>
+                            <option value="Orbitron">Orbitron Bold</option>
                             <option value="Noto Serif KR">본명조 Bold</option>
                             <option value="Cinzel Decorative">Cinzel Decorative Bold</option>
                         </select>
@@ -1071,6 +1074,8 @@
                 lines.push(`마킹 문구: ${document.getElementById('textInput').value || '(없음)'}`, `폰트: ${fontSelect.selectedOptions[0].textContent} (${fontSelect.value})`, `글자 높이 설정: ${document.getElementById('textSizeSlider').value}mm`, `문구 가로 폭: ${formatMm(currentTextWidthMm())}mm`, `텍스트 정렬: ${{left:'왼쪽',center:'가운데',right:'오른쪽'}[currentAlign]}`);
                 if (fontSelect.value === 'Cinzel Decorative') lines.push('한글 적용 폰트: 본명조 Bold (700)');
                 if (fontSelect.value === 'Rubik') lines.push('영문 굵기: SemiBold (600)', '한글 적용 폰트: 나눔스퀘어 Bold (700)');
+                if (fontSelect.value === 'Bebas Neue') lines.push('영문 굵기: Regular (400)', '한글 적용 폰트: 나눔스퀘어 Bold (700)');
+                if (fontSelect.value === 'Orbitron') lines.push('영문 굵기: Bold (700)', '한글 적용 폰트: 나눔스퀘어 Bold (700)');
             } else {
                 const alignment = {left:'왼쪽',center:'가운데',right:'오른쪽'}[logoAlign];
                 const layout = logoLayoutMm(logoBounds, Number(document.getElementById('logoSizeSlider').value), logoPositionMm, logoAlign);
@@ -1083,10 +1088,16 @@
             return lines.join('\n');
         }
 
-        function markingFontWeight(family) { return family === 'Rubik' ? 600 : 700; }
+        function markingFontWeight(family) {
+            if (family === 'Bebas Neue') return 400;
+            if (family === 'Rubik') return 600;
+            return 700;
+        }
 
         function markingFontFamily(family) {
             if (family === 'Rubik') return '"Rubik", "NanumSquare", sans-serif';
+            if (family === 'Bebas Neue') return '"Bebas Neue", "NanumSquare", sans-serif';
+            if (family === 'Orbitron') return '"Orbitron", "NanumSquare", sans-serif';
             if (family === 'Cinzel Decorative') return '"Cinzel Decorative", "Noto Serif KR", serif';
             if (family === 'Noto Serif KR') return '"Noto Serif KR", serif';
             return '"NanumSquare", sans-serif';
@@ -1094,9 +1105,16 @@
 
         async function ensureMarkingFont() {
             const selected = document.getElementById('fontSelect').value;
-            const families = selected === 'Cinzel Decorative' ? [selected, 'Noto Serif KR'] : selected === 'Rubik' ? [selected, 'NanumSquare'] : [selected];
+            const nanumFallbackFonts = ['Rubik', 'Bebas Neue', 'Orbitron'];
+            const families = selected === 'Cinzel Decorative'
+                ? [selected, 'Noto Serif KR']
+                : nanumFallbackFonts.includes(selected)
+                    ? [selected, 'NanumSquare']
+                    : [selected];
             await Promise.all(families.map(async family => {
-                const faces = await document.fonts.load(`${markingFontWeight(family)} 100px "${family}"`, (family === 'Cinzel Decorative' || family === 'Rubik') ? 'MEUS' : document.getElementById('textInput').value + '가나다MEUS');
+                const supportsKorean = family === 'NanumSquare' || family === 'Noto Serif KR';
+                const sample = supportsKorean ? document.getElementById('textInput').value + '가나다MEUS' : 'MEUS';
+                const faces = await document.fonts.load(`${markingFontWeight(family)} 100px "${family}"`, sample);
                 if (!faces.length) throw new Error('Font unavailable');
             }));
         }
@@ -1109,7 +1127,13 @@
                 const selected = document.getElementById('fontSelect').value;
                 status.textContent = selected === 'Cinzel Decorative'
                     ? '영문은 Cinzel Decorative Bold, 한글은 본명조 Bold로 표시됩니다.'
-                    : selected === 'Rubik' ? '영문은 Rubik SemiBold, 한글은 나눔스퀘어 Bold로 표시됩니다.' : '';
+                    : selected === 'Rubik'
+                        ? '영문은 Rubik SemiBold, 한글은 나눔스퀘어 Bold로 표시됩니다.'
+                        : selected === 'Bebas Neue'
+                            ? '영문은 Bebas Neue, 한글은 나눔스퀘어 Bold로 표시됩니다.'
+                            : selected === 'Orbitron'
+                                ? '영문은 Orbitron Bold, 한글은 나눔스퀘어 Bold로 표시됩니다.'
+                                : '';
                 renderPreview();
             } catch (_) {
                 status.textContent = '폰트를 불러오지 못했습니다. 인터넷 연결을 확인하고 다시 선택해 주세요.';
