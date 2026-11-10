@@ -103,7 +103,6 @@
         .primary-action:disabled { opacity: .55; }
         .logo-align-btn[aria-pressed=true] { color: #fff; background: #404C69; }
         #textInput { font-size: 16px; }
-        #logoPosLabel { text-align: right; }
         #resultNotice { background: #F7F5F0; border-color: #7E725740; color: #29210F; }
         #modalContent { box-shadow: 0 20px 70px #0F172A26; }
         .channel-link-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:14px; }
@@ -212,7 +211,6 @@
             input[type=range]::-webkit-slider-thumb { height:20px; width:20px; margin-top:-8px; }
             input[type=range]::-moz-range-thumb { width:20px; height:20px; }
             #textSizeInput { width:88px; }
-            #logoPosInput { width:96px; }
 
             .mobile-save-bar {
                 display:block;
@@ -386,13 +384,13 @@
                     <div>
                         <label class="block text-sm font-medium text-accent mb-1.5">텍스트 정렬</label>
                         <div class="flex bg-surface border border-line rounded-xl p-1 h-[46px]">
-                            <button class="align-btn flex-1 rounded-lg flex items-center justify-center text-muted hover:text-ink" data-align="left" onclick="setAlign('left')">
+                            <button class="align-btn flex-1 rounded-lg flex items-center justify-center text-muted hover:text-ink" data-align="left" aria-label="텍스트 왼쪽 정렬" onclick="setAlign('left')">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h16"/></svg>
                             </button>
-                            <button class="align-btn flex-1 rounded-lg bg-selected text-ink flex items-center justify-center shadow" data-align="center" onclick="setAlign('center')">
+                            <button class="align-btn flex-1 rounded-lg bg-selected text-ink flex items-center justify-center shadow" data-align="center" aria-label="텍스트 가운데 정렬" onclick="setAlign('center')">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M7 12h10M4 18h16"/></svg>
                             </button>
-                            <button class="align-btn flex-1 rounded-lg flex items-center justify-center text-muted hover:text-ink" data-align="right" onclick="setAlign('right')">
+                            <button class="align-btn flex-1 rounded-lg flex items-center justify-center text-muted hover:text-ink" data-align="right" aria-label="텍스트 오른쪽 정렬" onclick="setAlign('right')">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M10 12h10M4 18h16"/></svg>
                             </button>
                         </div>
@@ -419,8 +417,8 @@
             <div id="logoSettings" hidden class="bg-white border border-line rounded-2xl p-6 space-y-5">
                 <h3 class="text-base font-semibold text-ink">로고·이미지 설정</h3>
                 <div class="text-sm leading-relaxed text-earth bg-warm border border-olive/25 p-4 rounded-xl space-y-3" style="word-break:keep-all;">
-                    <p><strong>레이저 마킹 안내:</strong> 단색(바탕색/마킹색)으로만 표현되며, 원본의 컬러·그라데이션 및 세부 문양은 단순화될 수 있습니다.</p>
-                    <p><strong>다색/복잡한 로고:</strong> 화면상 구현이 어려우니 대략적인 크기만 확인 후 카카오톡 채널로 접수해 주세요. (로고 가공 시 추가금 발생)</p>
+                    <p><strong>레이저 각인 안내:</strong> 단색 (바탕색/각인색)으로만 표현되며, 원본의 컬러·그라데이션 및 세부 문양은 단순화될 수 있습니다.</p>
+                    <p><strong>복잡한 로고:</strong> 화면상 구현이 어려우니 대략적인 크기만 확인 후 카카오톡 채널로 접수해 주세요. (로고 가공 시 추가금 발생)</p>
                 </div>
                 <label for="logoUpload" class="block text-sm text-accent">시안에 사용할 이미지</label>
                 <input type="file" id="logoUpload" accept=".png,.jpg,.jpeg,.webp,.gif,.svg" onchange="handleLogoUpload(event)" class="w-full text-sm text-accent file:mr-3 file:p-3 file:rounded-lg file:border-0 file:bg-accent file:text-white bg-surface border border-line rounded-xl">
@@ -446,18 +444,14 @@
                         <p id="backgroundStatus" class="text-sm text-accent mt-2" role="status" aria-live="polite">원본 이미지입니다.</p>
                     </div>
                     <div>
-                        <label for="logoColorMode" class="block text-sm text-accent mb-2">브라켓 미리보기 색상</label>
-                        <select id="logoColorMode" onchange="refreshLogoAppearance()" class="w-full bg-surface border border-line rounded-xl p-3 text-sm">
-                            <option value="mono">브라켓에 맞춘 단색</option><option value="original">원본 색상 확인</option>
-                        </select>
-                        <p id="logoColorHelp" class="text-sm text-muted mt-2">선택한 브라켓/문구 색상에 맞춰 블랙 또는 화이트 각인으로 표시됩니다.</p>
+                        <p id="logoColorHelp" class="text-sm text-muted mt-2">선택한 브라켓의 각인색에 맞춰 단색으로 표시됩니다.</p>
                     </div>
                     <div>
                         <label for="logoSizeSlider" class="flex justify-between text-sm text-accent mb-3"><span>로고 크기 (높이)</span><output id="logoSizeLabel" class="text-accent">13mm</output></label>
                         <input type="range" id="logoSizeSlider" min="8" max="14" step="0.1" value="13" oninput="renderPreview()">
                         <p class="text-sm text-muted mt-3">최소 8mm · 최대 14mm · 가로세로 비율 유지</p>
                         <p id="logoSizeWarning" role="status" class="text-sm text-red-700 font-semibold mt-2" hidden></p>
-                        <p class="text-sm text-muted mt-2 leading-relaxed">단일 로고의 가로 길이는 최대 190mm입니다. 왼쪽·오른쪽에 각각 문구/로고를 넣는 등 복수 위치 마킹은 사이트에서 지원하지 않으며, 제작 시 추가금이 발생하므로 네이버 톡톡 또는 카카오톡 채널로 별도 문의해 주세요.</p>
+                        <p class="text-sm text-muted mt-2 leading-relaxed">단일 로고의 가로 길이는 최대 170mm입니다. 왼쪽·오른쪽에 각각 문구/로고를 넣는 등 복수 위치 마킹은 사이트에서 지원하지 않으며, 제작 시 추가금이 발생하므로 네이버 톡톡 또는 카카오톡 채널로 별도 문의해 주세요.</p>
                     </div>
                     <fieldset>
                         <legend class="text-sm text-accent mb-2">가로 정렬</legend>
@@ -467,15 +461,7 @@
                             <button type="button" class="logo-align-btn bg-selected rounded-lg p-2 text-sm" data-align="right" aria-pressed="false" onclick="setLogoAlign('right')">오른쪽</button>
                         </div>
                     </fieldset>
-                    <div>
-                        <label for="logoPosSlider" class="flex justify-between gap-3 text-sm text-accent mb-3"><span id="logoPosTitle">중앙 기준 이동거리</span><output id="logoPosLabel" class="text-accent">중앙 · 0mm</output></label>
-                        <input type="range" id="logoPosSlider" min="-216.6" max="216.6" step="0.1" value="0" oninput="updateLogoPosition(this.value)">
-                        <div class="flex items-center justify-between gap-3 mt-3 text-sm text-muted">
-                            <span id="logoPosHelp">음수는 왼쪽, 양수는 오른쪽 이동</span>
-                            <label class="flex items-center gap-2"><input id="logoPosInput" aria-label="로고 가로 위치 (mm)" type="number" min="-216.6" max="216.6" step="0.1" value="0" oninput="updateLogoPosition(this.value, true)" onblur="updateLogoPosition(this.value)" class="w-24 bg-surface border border-line rounded-lg px-2 py-2 text-ink text-right"><span>mm</span></label>
-                        </div>
-                        <p class="text-sm text-muted mt-2">가로 기준 437mm · 투명 여백을 제외한 로고 경계 기준</p>
-                    </div>
+                    <p class="text-sm text-muted">좌우 정렬 시 양끝 여백은 각각 8.5mm입니다. 투명 여백을 제외한 로고 경계 기준으로 배치됩니다.</p>
                     <button type="button" onclick="clearLogo()" class="text-sm text-red-700 underline">로고 삭제</button>
                 </fieldset>
                 <p class="text-sm leading-relaxed text-earth bg-warm border border-olive/25 p-3 rounded-xl">배경 제거와 단색 변환은 배치 확인을 위한 미리보기입니다. 제작용 파일 보정이 완료된 것은 아니며, 실제 제작 가능 여부와 보정 비용은 원본 확인 후 안내드립니다.</p>
@@ -580,7 +566,6 @@
         // State
         let currentAlign = 'center';
         let logoAlign = 'center';
-        let logoPositionMm = 0;
         let isLogoUploaded = false;
 
         // Initialize UI
@@ -618,7 +603,8 @@
         const minMarkingHeightMm = 8;
         const defaultMarkingHeightMm = 13;
         const maxMarkingHeightMm = 14;
-        const maxSingleMarkingWidthMm = 190;
+        const maxSingleMarkingWidthMm = 170;
+        const alignmentOffsetMm = 210;
         const maxSingleTextWidthMm = 170;
         function calibratedMarkingArea(photoArea) {
             const pxPerMm = photoArea.w / markingWidthMm;
@@ -760,8 +746,7 @@
                 document.getElementById('backgroundColor').value = '#' + pickCornerColor(original).map(v => v.toString(16).padStart(2,'0')).join('');
                 document.getElementById('backgroundStrength').value = 20;
                 document.getElementById('logoSizeSlider').value = defaultMarkingHeightMm;
-                logoAlign = 'center'; logoPositionMm = 0;
-                document.getElementById('logoColorMode').value = 'mono';
+                logoAlign = 'center';
                 status.textContent = `${file.name} · 시안용으로 불러왔습니다. 아직 MEUS에 접수되지 않았습니다.`;
                 rebuildLogo();
             } catch (error) {
@@ -801,11 +786,9 @@
                 logoInkCanvas = makeCanvas(logoProcessedCanvas.width, logoProcessedCanvas.height);
                 const ctx = logoInkCanvas.getContext('2d');
                 ctx.drawImage(logoProcessedCanvas,0,0);
-                if (document.getElementById('logoColorMode').value === 'mono') {
-                    ctx.globalCompositeOperation = 'source-in';
-                    ctx.fillStyle = bracketTypes[document.querySelector('input[name="tier"]:checked').value].color;
-                    ctx.fillRect(0,0,logoInkCanvas.width,logoInkCanvas.height);
-                }
+                ctx.globalCompositeOperation = 'source-in';
+                ctx.fillStyle = selected.color;
+                ctx.fillRect(0,0,logoInkCanvas.width,logoInkCanvas.height);
             }
             renderPreview();
         }
@@ -846,45 +829,24 @@
             updateBackgroundSettings();
         }
         function formatMm(value) { return Number(value.toFixed(1)).toString(); }
-        function logoLayoutMm(bounds, size, position, align) {
+        function alignmentAnchorMm(align) {
+            return markingWidthMm / 2 + (align === 'left' ? -alignmentOffsetMm : align === 'right' ? alignmentOffsetMm : 0);
+        }
+        function alignmentDescription(align) {
+            if (align === 'left') return `왼쪽 끝점: 영역 중앙에서 -${alignmentOffsetMm}mm (왼쪽 여백 ${formatMm(markingWidthMm/2-alignmentOffsetMm)}mm)`;
+            if (align === 'right') return `오른쪽 끝점: 영역 중앙에서 +${alignmentOffsetMm}mm (오른쪽 여백 ${formatMm(markingWidthMm/2-alignmentOffsetMm)}mm)`;
+            return '중앙 정렬: 영역 중앙 0mm';
+        }
+        function logoLayoutMm(bounds, size, align) {
             const heightMm = Math.max(minMarkingHeightMm, Math.min(maxMarkingHeightMm, Number(size) || defaultMarkingHeightMm));
             const widthMm = bounds ? bounds.w / bounds.h * heightMm : 0;
-            const freeMm = Math.max(0, markingWidthMm-widthMm);
-            const limit = Math.floor((align === 'center' ? freeMm/2 : freeMm) * 10) / 10;
-            const min = align === 'center' ? -limit : 0;
-            const offsetMm = Math.max(min, Math.min(limit, Number(position) || 0));
-            const leftMm = align === 'left' ? offsetMm : align === 'right' ? freeMm-offsetMm : (markingWidthMm-widthMm)/2+offsetMm;
-            return {heightMm, widthMm, leftMm, offsetMm, min, max:limit, fits:widthMm <= Math.min(markingWidthMm, maxSingleMarkingWidthMm)};
-        }
-        function logoPositionDescription() {
-            if (logoAlign === 'left') return `왼쪽 끝 → 로고 왼쪽 끝 여백 ${formatMm(logoPositionMm)}mm`;
-            if (logoAlign === 'right') return `로고 오른쪽 끝 → 오른쪽 끝 여백 ${formatMm(logoPositionMm)}mm`;
-            return logoPositionMm === 0 ? '중앙 · 0mm' : `중앙에서 ${logoPositionMm < 0 ? '왼쪽' : '오른쪽'} ${formatMm(Math.abs(logoPositionMm))}mm`;
-        }
-        function syncLogoPositionControls() {
-            const layout = logoLayoutMm(logoBounds, Number(document.getElementById('logoSizeSlider').value), logoPositionMm, logoAlign);
-            logoPositionMm = layout.offsetMm;
-            for (const id of ['logoPosSlider', 'logoPosInput']) {
-                const input = document.getElementById(id);
-                input.min = layout.min; input.max = layout.max;
-                if (id !== 'logoPosInput' || document.activeElement !== input) input.value = logoPositionMm;
-            }
-            document.getElementById('logoPosTitle').textContent = logoAlign === 'center' ? '중앙 기준 이동거리' : `${logoAlign === 'left' ? '왼쪽' : '오른쪽'} 끝 기준 여백`;
-            document.getElementById('logoPosHelp').textContent = logoAlign === 'center' ? '로고 중심 기준 · 음수: 왼쪽 / 양수: 오른쪽' : '마킹 영역 끝부터 로고 끝까지의 거리';
-            document.getElementById('logoPosLabel').textContent = logoPositionDescription();
-            updateLogoAlignButtons();
+            const anchorMm = alignmentAnchorMm(align);
+            const leftMm = anchorMm - (align === 'right' ? widthMm : align === 'center' ? widthMm/2 : 0);
+            return {heightMm, widthMm, leftMm, fits:widthMm <= maxSingleMarkingWidthMm && leftMm >= 0 && leftMm + widthMm <= markingWidthMm};
         }
         function setLogoAlign(align) {
-            logoAlign = align; logoPositionMm = 0;
-            document.getElementById('logoPosInput').value = 0;
-            renderPreview();
-        }
-        function updateLogoPosition(value, editing = false) {
-            const parsed = Number(value);
-            const range = logoLayoutMm(logoBounds, Number(document.getElementById('logoSizeSlider').value), logoPositionMm, logoAlign);
-            if (editing && (value === '' || !Number.isFinite(parsed) || parsed < range.min || parsed > range.max)) return;
-            logoPositionMm = Math.round(Math.max(range.min, Math.min(range.max, Number.isFinite(parsed) ? parsed : 0))*10)/10;
-            if (!editing) document.getElementById('logoPosInput').value = logoPositionMm;
+            logoAlign = align;
+            updateLogoAlignButtons();
             renderPreview();
         }
         function updateLogoAlignButtons() {
@@ -902,7 +864,7 @@
             document.getElementById('logoUpload').value = '';
             document.getElementById('logoControls').disabled = true;
             document.getElementById('logoSizeSlider').value = defaultMarkingHeightMm;
-            logoAlign = 'center'; logoPositionMm = 0;
+            logoAlign = 'center';
             document.getElementById('backgroundStrength').value = 20;
             document.getElementById('backgroundStrengthLabel').textContent = '20';
             document.getElementById('backgroundStatus').textContent = '원본 이미지입니다.';
@@ -910,8 +872,8 @@
             drawLogoEditor(); updateLogoAlignButtons(); renderPreview();
         }
 
-        function logoPlacement(area, bounds, size, position, align = logoAlign) {
-            const layout = logoLayoutMm(bounds, size, position, align);
+        function logoPlacement(area, bounds, size, align = logoAlign) {
+            const layout = logoLayoutMm(bounds, size, align);
             const h = layout.heightMm * area.pxPerMm, w = layout.widthMm * area.pxPerMm;
             return { x: area.x + layout.leftMm * area.pxPerMm, y: area.y + (area.h-h)/2, w, h, fits:layout.fits };
         }
@@ -936,7 +898,7 @@
             ctx.clip();
             const markingType = document.querySelector('input[name="markingType"]:checked').value;
             if (markingType === 'logo' && isLogoUploaded && logoInkCanvas && logoBounds) {
-                const placement = logoPlacement(area, logoBounds, Number(document.getElementById('logoSizeSlider').value), logoPositionMm);
+                const placement = logoPlacement(area, logoBounds, Number(document.getElementById('logoSizeSlider').value));
                 ctx.drawImage(logoInkCanvas, logoBounds.x, logoBounds.y, logoBounds.w, logoBounds.h, placement.x, placement.y, placement.w, placement.h);
                 markingFocusX = placement.x + placement.w / 2;
             }
@@ -956,7 +918,7 @@
                 ctx.fillStyle = config.color;
                 ctx.textBaseline = 'alphabetic';
                 ctx.textAlign = currentAlign;
-                const textX = currentAlign === 'left' ? area.x : currentAlign === 'right' ? area.x + area.w : area.x + area.w / 2;
+                const textX = area.x + alignmentAnchorMm(currentAlign) * area.pxPerMm;
                 const baseline = area.y + area.h / 2 + (actual.actualBoundingBoxAscent - actual.actualBoundingBoxDescent) / 2;
                 ctx.fillText(text, textX, baseline);
                 const visibleWidth = Math.min(actual.width, area.w);
@@ -995,7 +957,7 @@
         function logoFitsMarkingArea() {
             if (!logoBounds) return true;
             const key = document.querySelector('input[name="tier"]:checked').value;
-            return logoPlacement(calibratedMarkingArea(bracketTypes[key].area), logoBounds, Number(document.getElementById('logoSizeSlider').value), logoPositionMm).fits;
+            return logoPlacement(calibratedMarkingArea(bracketTypes[key].area), logoBounds, Number(document.getElementById('logoSizeSlider').value)).fits;
         }
 
         // A view-only crop of the same canvas used for the full preview; never changes export or physical dimensions.
@@ -1044,7 +1006,6 @@
         }
 
         function renderPreview() {
-            syncLogoPositionControls();
             const type = document.querySelector('input[name="markingType"]:checked').value;
             const textWidth = currentTextWidthMm();
             const textWarning = document.getElementById('textWidthWarning');
@@ -1052,11 +1013,11 @@
             textWarning.hidden = !textTooWide;
             textWarning.textContent = textTooWide ? `현재 문구 가로 길이 약 ${formatMm(textWidth)}mm — 최대 ${maxSingleTextWidthMm}mm를 초과해 저장할 수 없습니다. 크기 또는 문구를 줄여 주세요.` : '';
 
-            const logoLayout = logoLayoutMm(logoBounds, Number(document.getElementById('logoSizeSlider').value), logoPositionMm, logoAlign);
+            const logoLayout = logoLayoutMm(logoBounds, Number(document.getElementById('logoSizeSlider').value), logoAlign);
             const logoWarning = document.getElementById('logoSizeWarning');
             const logoTooWide = type === 'logo' && logoBounds && logoLayout.widthMm > maxSingleMarkingWidthMm;
             logoWarning.hidden = !logoTooWide;
-            logoWarning.textContent = logoTooWide ? `현재 로고 가로 길이 약 ${formatMm(logoLayout.widthMm)}mm — 최대 190mm를 초과해 저장할 수 없습니다. 로고 높이를 줄여 주세요.` : '';
+            logoWarning.textContent = logoTooWide ? `현재 로고 가로 길이 약 ${formatMm(logoLayout.widthMm)}mm — 최대 170mm를 초과해 저장할 수 없습니다. 로고 높이를 줄여 주세요.` : '';
 
             document.getElementById('textSizeLabel').innerText = document.getElementById('textSizeSlider').value + 'mm';
             document.getElementById('logoSizeLabel').innerText = document.getElementById('logoSizeSlider').value + 'mm';
@@ -1074,16 +1035,15 @@
             lines.push(`인쇄면 규격: ${markingWidthMm}mm × ${silkPrintHeightMm}mm`, `단일 마킹 최대 가로 길이: ${type === 'text' ? maxSingleTextWidthMm : maxSingleMarkingWidthMm}mm`, `마킹 영역 기준: 가로 ${markingWidthMm}mm × 최대 높이 ${maxMarkingHeightMm}mm`, `세로 배치: 실크인쇄면 높이 ${silkPrintHeightMm}mm의 중앙`);
             if (type === 'text') {
                 const fontSelect = document.getElementById('fontSelect');
-                lines.push(`마킹 문구: ${document.getElementById('textInput').value || '(없음)'}`, `폰트: ${fontSelect.selectedOptions[0].textContent} (${fontSelect.value})`, `글자 높이 설정: ${document.getElementById('textSizeSlider').value}mm`, `문구 가로 폭: ${formatMm(currentTextWidthMm())}mm`, `텍스트 정렬: ${{left:'왼쪽',center:'가운데',right:'오른쪽'}[currentAlign]}`);
+                lines.push(`마킹 문구: ${document.getElementById('textInput').value || '(없음)'}`, `폰트: ${fontSelect.selectedOptions[0].textContent} (${fontSelect.value})`, `글자 높이 설정: ${document.getElementById('textSizeSlider').value}mm`, `문구 가로 폭: ${formatMm(currentTextWidthMm())}mm`, `텍스트 정렬: ${{left:'왼쪽',center:'가운데',right:'오른쪽'}[currentAlign]}`, `가로 위치 (마킹 영역 기준): ${alignmentDescription(currentAlign)}`);
                 if (fontSelect.value === 'Cinzel Decorative') lines.push('한글 적용 폰트: 본명조 Bold (700)');
                 if (fontSelect.value === 'Rubik') lines.push('영문 굵기: SemiBold (600)', '한글 적용 폰트: 나눔스퀘어 Bold (700)');
                 if (fontSelect.value === 'Bebas Neue') lines.push('영문 굵기: Regular (400)', '한글 적용 폰트: 나눔스퀘어 Bold (700)');
                 if (fontSelect.value === 'Orbitron') lines.push('영문 굵기: Bold (700)', '한글 적용 폰트: 나눔스퀘어 Bold (700)');
             } else {
                 const alignment = {left:'왼쪽',center:'가운데',right:'오른쪽'}[logoAlign];
-                const layout = logoLayoutMm(logoBounds, Number(document.getElementById('logoSizeSlider').value), logoPositionMm, logoAlign);
-                const mono = document.getElementById('logoColorMode').value === 'mono';
-                lines.push(`로고 원본 파일명: ${originalLogoFile?.name || '(없음)'}`, `로고 높이 설정: ${document.getElementById('logoSizeSlider').value}mm`, `가로 정렬: ${alignment}`, `가로 위치 (마킹 영역 기준): ${logoPositionDescription()}`, `로고 가로 폭: ${formatMm(layout.widthMm)}mm`, `영역 왼쪽 끝 → 로고 왼쪽 끝: ${formatMm(layout.leftMm)}mm`, `영역 중앙 → 로고 중심: ${formatMm(layout.leftMm + layout.widthMm/2 - markingWidthMm/2)}mm (음수: 왼쪽 / 양수: 오른쪽)`, `미리보기 색상: ${mono ? `${config.markingLabel} 단색` : '원본 색상'}`, `배경 제거: ${backgroundRemoved ? '적용' : '미적용 (원본)'}`);
+                const layout = logoLayoutMm(logoBounds, Number(document.getElementById('logoSizeSlider').value), logoAlign);
+                lines.push(`로고 원본 파일명: ${originalLogoFile?.name || '(없음)'}`, `로고 높이 설정: ${document.getElementById('logoSizeSlider').value}mm`, `가로 정렬: ${alignment}`, `가로 위치 (마킹 영역 기준): ${alignmentDescription(logoAlign)}`, `로고 가로 폭: ${formatMm(layout.widthMm)}mm`, `영역 왼쪽 끝 → 로고 왼쪽 끝: ${formatMm(layout.leftMm)}mm`, `영역 중앙 → 로고 중심: ${formatMm(layout.leftMm + layout.widthMm/2 - markingWidthMm/2)}mm (음수: 왼쪽 / 양수: 오른쪽)`, `미리보기 색상: ${config.markingLabel} 단색`, `배경 제거: ${backgroundRemoved ? '적용' : '미적용 (원본)'}`);
                 if (backgroundRemoved) lines.push(`제거한 배경색: ${document.getElementById('backgroundColor').value.toUpperCase()}`, `배경 제거 강도: ${document.getElementById('backgroundStrength').value}/100`);
                 lines.push('제작용 로고 원본 파일을 별도로 함께 전달해 주세요.');
             }
@@ -1168,8 +1128,8 @@
                     return;
                 }
                 if (type === 'logo' && !logoFitsMarkingArea()) {
-                    const widthMm = logoLayoutMm(logoBounds, Number(document.getElementById('logoSizeSlider').value), logoPositionMm, logoAlign).widthMm;
-                    alert(`현재 로고 가로 길이는 약 ${formatMm(widthMm)}mm입니다. 단일 마킹은 최대 190mm까지 가능합니다. 로고 높이를 줄여 주세요.\n\n왼쪽·오른쪽에 각각 문구/로고를 넣는 복수 위치 마킹은 추가금이 발생하므로 네이버 톡톡 또는 카카오톡 채널로 별도 문의해 주세요.`);
+                    const widthMm = logoLayoutMm(logoBounds, Number(document.getElementById('logoSizeSlider').value), logoAlign).widthMm;
+                    alert(`현재 로고 가로 길이는 약 ${formatMm(widthMm)}mm입니다. 단일 마킹은 최대 170mm까지 가능합니다. 로고 높이를 줄여 주세요.\n\n왼쪽·오른쪽에 각각 문구/로고를 넣는 복수 위치 마킹은 추가금이 발생하므로 네이버 톡톡 또는 카카오톡 채널로 별도 문의해 주세요.`);
                     return;
                 }
                 const canvas = document.getElementById('exportCanvas');
