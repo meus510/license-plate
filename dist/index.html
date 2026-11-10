@@ -1033,11 +1033,10 @@
             const key = document.querySelector('input[name="tier"]:checked').value;
             const type = document.querySelector('input[name="markingType"]:checked').value;
             const config = bracketTypes[key];
-            const lines = ['[MEUS 브라켓 제작 요청]', `브라켓: ${config.name}`, `브라켓 색상: ${config.backgroundLabel} 배경 / ${config.markingLabel} 각인`, `마킹 타입: ${type === 'text' ? '텍스트' : '로고·이미지'}`];
-            lines.push(`인쇄면 규격: ${markingWidthMm}mm × ${silkPrintHeightMm}mm`, `단일 마킹 최대 가로 길이: ${type === 'text' ? maxSingleTextWidthMm : maxSingleMarkingWidthMm}mm`, `마킹 영역 기준: 가로 ${markingWidthMm}mm × 최대 높이 ${maxMarkingHeightMm}mm`, `세로 배치: 실크인쇄면 높이 ${silkPrintHeightMm}mm의 중앙`);
+            const lines = ['[MEUS 브라켓 제작 요청]', `브라켓 색상: ${config.backgroundLabel} 배경 / ${config.markingLabel} 각인`, `마킹 타입: ${type === 'text' ? '텍스트' : '로고·이미지'}`];
             if (type === 'text') {
                 const fontSelect = document.getElementById('fontSelect');
-                lines.push(`마킹 문구: ${document.getElementById('textInput').value || '(없음)'}`, `폰트: ${fontSelect.selectedOptions[0].textContent} (${fontSelect.value})`, `글자 높이 설정: ${document.getElementById('textSizeSlider').value}mm`, `문구 가로 폭: ${formatMm(currentTextWidthMm())}mm`, `텍스트 정렬: ${{left:'왼쪽',center:'가운데',right:'오른쪽'}[currentAlign]}`, `가로 위치 (마킹 영역 기준): ${alignmentDescription(currentAlign)}`);
+                lines.push(`마킹 문구: ${document.getElementById('textInput').value || '(없음)'}`, `폰트: ${fontSelect.selectedOptions[0].textContent} (${fontSelect.value})`, `글자 높이 설정: ${document.getElementById('textSizeSlider').value}mm`, `텍스트 정렬: ${{left:'왼쪽',center:'가운데',right:'오른쪽'}[currentAlign]}`, `가로 위치 (마킹 영역 기준): ${alignmentDescription(currentAlign)}`);
                 if (fontSelect.value === 'Cinzel Decorative') lines.push('한글 적용 폰트: 본명조 Bold (700)');
                 if (fontSelect.value === 'Rubik') lines.push('영문 굵기: SemiBold (600)', '한글 적용 폰트: 나눔스퀘어 Bold (700)');
                 if (fontSelect.value === 'Bebas Neue') lines.push('영문 굵기: Regular (400)', '한글 적용 폰트: 나눔스퀘어 Bold (700)');
