@@ -57,7 +57,7 @@
         .studio-header-inner { max-width:1360px; margin:auto; min-height:88px; padding:20px 32px; display:flex; align-items:center; justify-content:space-between; gap:24px; }
         .studio-header-inner > div { display:flex; align-items:center; gap:20px; }
         .header-brand { width:180px; aspect-ratio:1276/276; position:relative; overflow:hidden; flex:none; }
-        .header-brand img { position:absolute; display:block; max-width:none; width:109.718%; height:auto; left:-6.113%; top:-182.971%; }
+        .header-brand img { position:absolute; display:block; max-width:none; width:109.718%; height:auto; left:-6.113%; top:-182.971%; filter:url(#meus-logo-true-black); }
         .brand-studio-name { border-left:1px solid var(--brand-line); padding-left:20px; font:800 12px/1.4 Arial,sans-serif; letter-spacing:.12em; }
         .brand-tagline { font:700 11px/1.4 Arial,sans-serif; letter-spacing:.1em; }
         .studio-layout { width:100%; max-width:1360px; margin:0 auto; display:grid; grid-template-columns:minmax(0,1.35fr) minmax(360px,.9fr); gap:0; align-items:start; padding:28px 32px 48px; }
@@ -206,6 +206,7 @@
     </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased">
+    <svg aria-hidden="true" width="0" height="0" style="position:absolute;pointer-events:none"><defs><filter id="meus-logo-true-black" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="1.179159049360 -0.019195612431 0.000000000000 0.000000000000 -0.159963436929 0.127970749543 0.986288848263 0.000000000000 0.000000000000 -0.114259597806 0.106946983547 1.006398537477 0.000000000000 0.000000000000 -0.113345521024 0.000000000000 0.000000000000 0.000000000000 1.000000000000 0.000000000000"/></filter></defs></svg>
 
     <header class="border-b border-line bg-white/95 backdrop-blur sticky top-0 z-40">
         <div class="studio-header-inner flex items-center justify-between">
