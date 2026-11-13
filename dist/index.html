@@ -316,7 +316,7 @@
                 
                 <div>
                     <label class="block text-sm font-medium text-accent mb-1.5">각인 문구</label>
-                    <input type="text" id="textInput" aria-label="각인 문구" value="MEUS" oninput="renderPreview()" placeholder="문구를 입력하세요" class="w-full bg-surface border border-line rounded-xl px-4 py-3 text-ink focus:outline-none focus:border-accent transition text-sm">
+                    <input type="text" id="textInput" aria-label="각인 문구" value="YOUR TEXT HERE" onfocus="if (!this.dataset.edited &amp;&amp; this.value === 'YOUR TEXT HERE') { this.value = ''; renderPreview(); } this.dataset.edited = 'true';" oninput="this.dataset.edited = 'true'; renderPreview()" placeholder="문구를 입력하세요" class="w-full bg-surface border border-line rounded-xl px-4 py-3 text-ink focus:outline-none focus:border-accent transition text-sm">
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
