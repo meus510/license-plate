@@ -333,7 +333,7 @@
                         <p id="fontStatus" role="status" aria-live="polite" class="text-sm text-muted mt-2"></p>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-accent mb-1.5">텍스트 정렬</label>
+                        <label class="block text-sm font-medium text-accent mb-1.5">각인 위치</label>
                         <div class="text-align-control">
                             <button class="align-btn flex-1 rounded-lg flex items-center justify-center text-muted hover:text-ink" data-align="left" aria-label="텍스트 왼쪽 정렬" aria-pressed="false" onclick="setAlign('left')">왼쪽</button>
                             <button class="align-btn flex-1 rounded-lg bg-selected text-ink flex items-center justify-center shadow" data-align="center" aria-label="텍스트 가운데 정렬" aria-pressed="true" onclick="setAlign('center')">가운데</button>
@@ -341,6 +341,7 @@
                         </div>
                     </div>
                 </div>
+                <p class="text-sm text-muted">좌우 정렬 시 양끝 여백은 각각 8.5mm입니다.<br>투명 여백을 제외한 로고 경계 기준으로 배치됩니다.</p>
 
                 <div>
                     <label class="block text-sm font-medium text-accent mb-3 flex justify-between">
@@ -399,14 +400,14 @@
                         <p class="text-sm text-muted mt-2 leading-relaxed">단일 로고의 가로 길이는 최대 170mm입니다. 왼쪽·오른쪽에 각각 문구/로고를 넣는 등 복수 위치 마킹은 사이트에서 지원하지 않으며, 제작 시 추가금이 발생하므로 네이버 톡톡 또는 카카오톡 채널로 별도 문의해 주세요.</p>
                     </div>
                     <fieldset>
-                        <legend class="text-sm text-accent mb-2">가로 정렬</legend>
+                        <legend class="text-sm text-accent mb-2">각인 위치</legend>
                         <div class="logo-align-control">
                             <button type="button" class="logo-align-btn bg-selected rounded-lg p-2 text-sm" data-align="left" aria-pressed="false" onclick="setLogoAlign('left')">왼쪽</button>
                             <button type="button" class="logo-align-btn bg-accent rounded-lg p-2 text-sm" data-align="center" aria-pressed="true" onclick="setLogoAlign('center')">가운데</button>
                             <button type="button" class="logo-align-btn bg-selected rounded-lg p-2 text-sm" data-align="right" aria-pressed="false" onclick="setLogoAlign('right')">오른쪽</button>
                         </div>
                     </fieldset>
-                    <p class="text-sm text-muted">좌우 정렬 시 양끝 여백은 각각 8.5mm입니다. 투명 여백을 제외한 로고 경계 기준으로 배치됩니다.</p>
+                    <p class="text-sm text-muted">좌우 정렬 시 양끝 여백은 각각 8.5mm입니다.<br>투명 여백을 제외한 로고 경계 기준으로 배치됩니다.</p>
                     <button type="button" onclick="clearLogo()" class="text-sm text-red-700 underline">로고 삭제</button>
                 </fieldset>
                 <p class="text-sm leading-relaxed text-earth bg-warm border border-olive/25 p-3 rounded-xl">배경 제거와 단색 변환은 배치 확인을 위한 미리보기입니다. 제작용 파일 보정이 완료된 것은 아니며, 실제 제작 가능 여부와 보정 비용은 원본 확인 후 안내드립니다.</p>
@@ -990,7 +991,7 @@
             const lines = ['[MEUS 브라켓 제작 요청]', `브라켓 색상: ${config.backgroundLabel} 배경 / ${config.markingLabel} 각인`, `마킹 타입: ${type === 'text' ? '텍스트' : '로고·이미지'}`];
             if (type === 'text') {
                 const fontSelect = document.getElementById('fontSelect');
-                lines.push(`각인 문구: ${document.getElementById('textInput').value || '(없음)'}`, `폰트: ${fontSelect.selectedOptions[0].textContent} (${fontSelect.value})`, `글자 높이 설정: ${document.getElementById('textSizeSlider').value}mm`, `텍스트 정렬: ${{left:'왼쪽',center:'가운데',right:'오른쪽'}[currentAlign]}`, `가로 위치 (마킹 영역 기준): ${alignmentDescription(currentAlign)}`);
+                lines.push(`각인 문구: ${document.getElementById('textInput').value || '(없음)'}`, `폰트: ${fontSelect.selectedOptions[0].textContent} (${fontSelect.value})`, `글자 높이 설정: ${document.getElementById('textSizeSlider').value}mm`, `각인 위치: ${{left:'왼쪽',center:'가운데',right:'오른쪽'}[currentAlign]}`, `가로 위치 (마킹 영역 기준): ${alignmentDescription(currentAlign)}`);
                 if (fontSelect.value === 'Cinzel Decorative') lines.push('한글 적용 폰트: 본명조 Bold (700)');
                 if (fontSelect.value === 'Rubik') lines.push('영문 굵기: SemiBold (600)', '한글 적용 폰트: 나눔스퀘어 Bold (700)');
                 if (fontSelect.value === 'Bebas Neue') lines.push('영문 굵기: Regular (400)', '한글 적용 폰트: 나눔스퀘어 Bold (700)');
@@ -998,7 +999,7 @@
             } else {
                 const alignment = {left:'왼쪽',center:'가운데',right:'오른쪽'}[logoAlign];
                 const layout = logoLayoutMm(logoBounds, Number(document.getElementById('logoSizeSlider').value), logoAlign);
-                lines.push(`로고 원본 파일명: ${originalLogoFile?.name || '(없음)'}`, `로고 높이 설정: ${document.getElementById('logoSizeSlider').value}mm`, `가로 정렬: ${alignment}`, `가로 위치 (마킹 영역 기준): ${alignmentDescription(logoAlign)}`, `로고 가로 폭: ${formatMm(layout.widthMm)}mm`, `영역 왼쪽 끝 → 로고 왼쪽 끝: ${formatMm(layout.leftMm)}mm`, `영역 중앙 → 로고 중심: ${formatMm(layout.leftMm + layout.widthMm/2 - markingWidthMm/2)}mm (음수: 왼쪽 / 양수: 오른쪽)`, `미리보기 색상: ${config.markingLabel} 단색`, `배경 제거: ${backgroundRemoved ? '적용' : '미적용 (원본)'}`);
+                lines.push(`로고 원본 파일명: ${originalLogoFile?.name || '(없음)'}`, `로고 높이 설정: ${document.getElementById('logoSizeSlider').value}mm`, `각인 위치: ${alignment}`, `가로 위치 (마킹 영역 기준): ${alignmentDescription(logoAlign)}`, `로고 가로 폭: ${formatMm(layout.widthMm)}mm`, `영역 왼쪽 끝 → 로고 왼쪽 끝: ${formatMm(layout.leftMm)}mm`, `영역 중앙 → 로고 중심: ${formatMm(layout.leftMm + layout.widthMm/2 - markingWidthMm/2)}mm (음수: 왼쪽 / 양수: 오른쪽)`, `미리보기 색상: ${config.markingLabel} 단색`, `배경 제거: ${backgroundRemoved ? '적용' : '미적용 (원본)'}`);
                 if (backgroundRemoved) lines.push(`제거한 배경색: ${document.getElementById('backgroundColor').value.toUpperCase()}`, `배경 제거 강도: ${document.getElementById('backgroundStrength').value}/100`);
                 lines.push('제작용 로고 원본 파일을 별도로 함께 전달해 주세요.');
             }
