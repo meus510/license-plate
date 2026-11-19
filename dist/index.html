@@ -76,8 +76,7 @@
         .live-status::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--brand-red); }
         .preview-stage { min-height:240px; background:#f5f5f4; padding:28px 16px; display:flex; align-items:center; justify-content:center; }
         #bracketPreview { display:block; width:100%; max-width:100%; height:auto; mix-blend-mode:multiply; }
-        .preview-metadata { display:flex; justify-content:space-between; align-items:center; gap:12px; background:#f7f7f7; padding:13px 16px; font:700 11px/1.5 Arial,sans-serif; }
-        .preview-metadata span:last-child { color:#737373; font-weight:400; white-space:nowrap; }
+        .preview-color-note { margin:0; background:#f7f7f7; padding:13px 16px; color:#737373; font-size:12px; font-weight:400; line-height:1.7; word-break:keep-all; }
         .marking-detail { display:block; margin-top:20px; }
         .marking-detail summary { list-style:none; display:flex; justify-content:space-between; align-items:center; gap:12px; min-height:40px; font-size:13px; font-weight:700; cursor:pointer; }
         .marking-detail summary::-webkit-details-marker { display:none; }
@@ -201,11 +200,11 @@
             .brand-tagline { display:none; }
             .studio-layout { display:block; max-width:680px; padding:8px 16px 24px; }
             .preview-column { position:sticky; top:49px; z-index:34; padding:0 0 8px; background:#fff; border-bottom:1px solid var(--brand-line); }
-            .preview-heading,.preview-metadata { display:none; }
+            .preview-heading { display:none; }
             .preview-heading h1 { font-size:12px; }
             .live-status { font-size:11px; }
             .preview-stage { min-height:0; padding:0; background:#fff; }
-            .preview-metadata { padding:10px 12px; font-size:10px; }
+            .preview-color-note { padding:8px 0; background:#fff; font-size:10px; line-height:1.6; }
             .marking-detail { margin-top:4px; }
             .marking-detail summary { min-height:36px; font-size:12px; }
             #markingDetailCanvas { height:64px; }
@@ -254,7 +253,7 @@
             <div class="preview-surface">
                 <div class="preview-heading"><h1>LIVE PREVIEW</h1><span class="live-status">실시간 시안</span></div>
                 <div class="preview-stage"><canvas id="bracketPreview" width="2048" height="540" role="img" aria-label="선택한 브라켓과 문구 시안"></canvas></div>
-                <div class="preview-metadata"><span id="previewColorName">GREY × BLACK</span><span>437 × 15 mm</span></div>
+                <p class="preview-color-note">화면에 표시되는 색상은 이해를 돕기 위한 미리보기로, 실제 제품은 조명 환경과 모니터 설정에 따라 다르게 보일 수 있습니다.</p>
                 <details id="markingDetail" class="marking-detail">
                     <summary>마킹 부분 확대</summary>
                     <div id="markingDetailViewport" class="marking-detail-viewport" tabindex="0" role="region" aria-label="마킹 확대 보기, 좌우로 이동 가능">
@@ -598,7 +597,6 @@
             document.getElementById('oneColorName').textContent = bracketTypes.default.name;
             document.getElementById('twoColorName').textContent = bracketTypes.advanced.name;
             document.getElementById('grayWhiteName').textContent = bracketTypes.grayWhite.name;
-            document.getElementById('previewColorName').textContent = {default:'GREY × BLACK', grayWhite:'GREY × LIGHT GREY', silver:'SILVER × BLACK', white:'WHITE × BLACK', advanced:'BLACK × WHITE'}[document.querySelector('input[name="tier"]:checked').value];
             updateRadioStyles();
             refreshLogoAppearance();
         }
